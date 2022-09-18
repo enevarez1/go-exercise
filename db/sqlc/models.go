@@ -54,7 +54,7 @@ type User struct {
 	FullName    string       `json:"full_name"`
 	Email       string       `json:"email"`
 	Password    string       `json:"password"`
-	CreatedAt   time.Time    `json:"created_at"`
+	CreatedAt   sql.NullTime `json:"created_at"`
 	LastUpdated sql.NullTime `json:"last_updated"`
 }
 
