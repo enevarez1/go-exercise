@@ -13,13 +13,19 @@ CREATE TABLE Exercise (
   	exercise_name TEXT NOT NULL,
   	exercise_type_id TEXT NOT NULL,
   	user_id INT NOT NULL,
-	CONSTRAINT fk_user FOREIGN KEY(user_id) REFERENCES Users(id)
+	CONSTRAINT fk_user 
+		FOREIGN KEY(user_id) 
+		REFERENCES Users(id)
+		ON DELETE CASCADE
 );
 
 CREATE TABLE Workout_Type (
   	workout_type TEXT PRIMARY KEY,
 	user_id INT NOT NULL,
-	CONSTRAINT fk_user FOREIGN KEY(user_id) REFERENCES Users(id)
+	CONSTRAINT fk_user 
+		FOREIGN KEY(user_id) 
+		REFERENCES Users(id)
+		ON DELETE CASCADE
 );
 
 CREATE TABLE Workout (
@@ -27,8 +33,14 @@ CREATE TABLE Workout (
   	workout_name TEXT NOT NULL,
  	workout_type_id TEXT NOT NULL,
 	user_id INT NOT NULL,
-	CONSTRAINT fk_user FOREIGN KEY(user_id) REFERENCES Users(id),
-	CONSTRAINT fk_workout_type FOREIGN KEY(workout_type_id) REFERENCES Workout_Type(workout_type)
+	CONSTRAINT fk_user 
+		FOREIGN KEY(user_id) 
+		REFERENCES Users(id)
+		ON DELETE CASCADE,
+	CONSTRAINT fk_workout_type 
+		FOREIGN KEY(workout_type_id) 
+		REFERENCES Workout_Type(workout_type)
+		ON DELETE CASCADE
 );
 
 CREATE TABLE Exercise_Workout_Junction (
@@ -36,9 +48,18 @@ CREATE TABLE Exercise_Workout_Junction (
   	exercise_id INT NOT NULL,
   	workout_id INT NOT NULL,
 	user_id INT NOT NULL,
-	CONSTRAINT fk_user_id FOREIGN KEY(user_id) REFERENCES Users(id),
-	CONSTRAINT fk_exercise_id FOREIGN KEY(exercise_id) REFERENCES Exercise("id"),
-	CONSTRAINT fk_workout_id FOREIGN KEY(workout_id) REFERENCES Workout("id")
+	CONSTRAINT fk_user_id 
+		FOREIGN KEY(user_id) 
+		REFERENCES Users(id)
+		ON DELETE CASCADE,
+	CONSTRAINT fk_exercise_id 
+		FOREIGN KEY(exercise_id) 
+		REFERENCES Exercise("id")
+		ON DELETE CASCADE,
+	CONSTRAINT fk_workout_id 
+		FOREIGN KEY(workout_id) 
+		REFERENCES Workout("id")
+		ON DELETE CASCADE
 );
 
 CREATE TABLE Exercise_Workout_Target (
@@ -47,7 +68,10 @@ CREATE TABLE Exercise_Workout_Target (
   	set_number INT NOT NULL,
   	min_reps INT NOT NULL,
   	max_reps INT NOT NULL,
-	CONSTRAINT fk_junction_id FOREIGN KEY(junction_id) REFERENCES Exercise_Workout_Junction("id")
+	CONSTRAINT fk_junction_id 
+		FOREIGN KEY(junction_id) 
+		REFERENCES Exercise_Workout_Junction("id")
+		ON DELETE CASCADE
 );
 
 CREATE TABLE Log (
@@ -55,8 +79,14 @@ CREATE TABLE Log (
   	workout_id INT NOT NULL,
   	dateOf TIMESTAMP NOT NULL,
 	user_id INT NOT NULL,
-	CONSTRAINT fk_user FOREIGN KEY(user_id) REFERENCES Users(id),
-	CONSTRAINT fk_workout_id FOREIGN KEY(workout_id) REFERENCES Workout("id")
+	CONSTRAINT fk_user 
+		FOREIGN KEY(user_id) 
+		REFERENCES Users(id)
+		ON DELETE CASCADE,
+	CONSTRAINT fk_workout_id 
+		FOREIGN KEY(workout_id) 
+		REFERENCES Workout("id")
+		ON DELETE CASCADE
 );
 
 CREATE TABLE Log_Entry (
