@@ -9,8 +9,14 @@ INSERT INTO Users (
 )
 RETURNING *;
 
+-- name: GetUser :one
+SELECT * FROM Users WHERE id = $1;
+
 -- name: UpdateUser :exec
 UPDATE Users 
 SET full_name = $1,
     password = $2
 WHERE id = $3;
+
+-- name: DeleteUser :exec
+DELETE FROM Users WHERE id = $1;
