@@ -16,7 +16,10 @@ migrateup:
 migratedown:
 	migrate -path db/migration -database "postgresql://root:secret@localhost:5432/exercise_db?sslmode=disable" -verbose down
 
+test:
+	go test -v -cover ./...
+
 sqlc:
 	sqlc generate
 
-.PHONY: postgres pgadmin createdb dropdb migrateup migratedown sqlc
+.PHONY: postgres pgadmin createdb dropdb migrateup migratedown test sqlc
