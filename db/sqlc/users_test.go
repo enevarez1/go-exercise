@@ -8,7 +8,7 @@ import (
 	"github.com/stretchr/testify/require"
 )
 
-func createTestingUser(t *testing.T) User{
+func createTestingUser(t *testing.T) User {
 	arg := CreateUserParams{
 		UserName: "testy",
 		FullName: "Test Mcgee",
@@ -33,7 +33,7 @@ func deleteTestingUser(t *testing.T, u User) {
 	err := testQueries.DeleteUser(context.Background(), u.ID)
 	require.NoError(t, err)
 
-	user, err := testQueries.GetUser(context.Background(),1)
+	user, err := testQueries.GetUser(context.Background(),u.ID)
 	require.Error(t, err)
 	require.EqualError(t, err, sql.ErrNoRows.Error())
 	require.Empty(t, user)
