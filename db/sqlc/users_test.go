@@ -30,10 +30,10 @@ func createTestingUser(t *testing.T) User {
 }
 
 func deleteTestingUser(t *testing.T, u User) {
-	err := testQueries.DeleteUser(context.Background(), u.ID)
+	err := testQueries.DeleteUser(context.Background(), u.UserName)
 	require.NoError(t, err)
 
-	user, err := testQueries.GetUser(context.Background(),u.ID)
+	user, err := testQueries.GetUser(context.Background(),u.UserName)
 	require.Error(t, err)
 	require.EqualError(t, err, sql.ErrNoRows.Error())
 	require.Empty(t, user)
@@ -47,7 +47,7 @@ func TestCreateUser(t *testing.T) {
 
 func TestGetUser(t *testing.T) {
 	rand := createTestingUser(t)
-	user, err := testQueries.GetUser(context.Background(), rand.ID)
+	user, err := testQueries.GetUser(context.Background(), rand.UserName)
 
 	require.NoError(t, err)
 	require.NotEmpty(t, user)
@@ -67,14 +67,14 @@ func TestUpdateUser(t *testing.T) {
 	arg := UpdateUserParams {
 		FullName: "TestUpdate",
 		Password: "updatePassword",
-		ID: rand.ID,
+		UserName: rand.UserName,
 	}
 
 	err := testQueries.UpdateUser(context.Background(), arg)
 	require.NoError(t, err)
 
 	// Grab so we can see if it updated
-	user, getErr := testQueries.GetUser(context.Background(),rand.ID)
+	user, getErr := testQueries.GetUser(context.Background(),rand.UserName)
 	require.NoError(t, getErr)
 	require.NotEmpty(t, user)
 

@@ -17,7 +17,7 @@ type Exercise struct {
 }
 
 type ExerciseWorkoutJunction struct {
-	JunctionID string `json:"junction_id"`
+	JunctionID int32  `json:"junction_id"`
 	ExerciseID int32  `json:"exercise_id"`
 	WorkoutID  int32  `json:"workout_id"`
 	UserID     string `json:"user_id"`

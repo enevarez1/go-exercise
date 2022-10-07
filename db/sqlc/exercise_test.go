@@ -13,7 +13,7 @@ func createTestExercise(t *testing.T) Exercise {
 	arg := CreateExerciseParams {
 		ExerciseName: "Bench",
 		ExerciseTypeID: "Chest",
-		UserID: user.ID,
+		UserID: user.UserName,
 	}
 
 	exercise, err := testQueries.CreateExercise(context.Background(), arg)
@@ -32,7 +32,7 @@ func deleteTestExercise(t *testing.T, e Exercise) {
 	err := testQueries.DeleteExercise(context.Background(), e.ID)
 
 	require.NoError(t, err)
-	testQueries.DeleteUser(context.Background(), e.ID)
+	testQueries.DeleteUser(context.Background(), e.UserID)
 }
 
 func TestCreateExercise(t *testing.T) {

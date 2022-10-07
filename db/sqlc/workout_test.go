@@ -9,10 +9,11 @@ import (
 
 func createTestWorkout(t *testing.T) Workout {
 	user := createTestingUser(t)
-	
-	arg := CreateWorkoutParams {
+
+	arg := CreateWorkoutParams{
 		WorkoutName: "Upper Push",
-		WorkoutTypeID: "Chest, Triceps, Shoulders", // make this object slice
+		WorkoutType: []string{"Chest, Triceps, Shoulders"},
+		UserID:      user.UserName, // make this object slice
 	}
 
 	workout, err := testQueries.CreateWorkout(context.Background(), arg)
@@ -21,58 +22,95 @@ func createTestWorkout(t *testing.T) Workout {
 	require.NotEmpty(t, workout)
 
 	require.Equal(t, arg.WorkoutName, workout.WorkoutName)
-	require.Equal(t, arg.WorkoutTypeID, workout.WorkoutTypeID)
+	require.Equal(t, arg.WorkoutType, workout.WorkoutType)
 
 	return workout
 
 }
 
-func deleteTestWorkout(t *testing.T, e Exercise) {
-	err := testQueries.DeleteExercise(context.Background(), e.ID)
+func deleteTestWorkout(t *testing.T, w Workout) {
+	err := testQueries.DeleteExercise(context.Background(), w.ID)
 
 	require.NoError(t, err)
-	testQueries.DeleteUser(context.Background(), e.ID)
+	testQueries.DeleteUser(context.Background(), w.UserID)
 }
 
 func TestCreateWorkout(t *testing.T) {
-	e := createTestExercise(t)
-	deleteTestExercise(t, e)
+	e := createTestWorkout(t)
+	deleteTestWorkout(t, e)
 }
 
-func TestGatherWorkout(t *testing.T) {
-	exer1 := createTestExercise(t)
-	exer2, err := testQueries.GatherExercises(context.Background(), exer1.UserID)
+func TestGetWorkoutByName(t *testing.T) {
+	work1 := createTestWorkout(t)
+
+	arg := GetWorkoutNameParams{
+		UserID:      work1.UserID,
+		WorkoutName: work1.WorkoutName,
+	}
+
+	work2, err := testQueries.GetWorkoutName(context.Background(), arg)
 
 	require.NoError(t, err)
-	require.NotEmpty(t, exer2)
+	require.NotEmpty(t, work2)
 
-	require.Equal(t, exer1.ExerciseName, exer2[0].ExerciseName)
-	require.Equal(t, exer1.ExerciseTypeID, exer2[0].ExerciseTypeID)
+	require.Equal(t, work1.WorkoutName, work2.WorkoutName)
+	require.Equal(t, work1.WorkoutType, work2.WorkoutType)
 
-	deleteTestExercise(t, exer1)
+	deleteTestWorkout(t, work1)
+}
+
+func TestGetWorkouts(t *testing.T) {
+	work1 := createTestWorkout(t)
+	//Create 2nd Workout
+	arg2 := CreateWorkoutParams{
+		WorkoutName: "Legs",
+		WorkoutType: []string{"Quads, Hamstrings, Calves"},
+		UserID:      work1.UserID, // make this object slice
+	}
+
+	work2, err := testQueries.CreateWorkout(context.Background(), arg2)
+	require.NoError(t, err)
+	require.NotEmpty(t, work2)
+
+	// Grab all Workouts
+	workouts, err := testQueries.GetWorkouts(context.Background(), work1.UserID)
+	require.NoError(t, err)
+	require.NotEmpty(t, workouts)
+
+	require.Equal(t, work1.WorkoutName, workouts[0].WorkoutName)
+	require.Equal(t, work1.WorkoutType, workouts[0].WorkoutType)
+	require.Equal(t, work2.WorkoutName, workouts[1].WorkoutName)
+	require.Equal(t, work2.WorkoutType, workouts[1].WorkoutType)
+
+	deleteTestWorkout(t, work1)
 }
 
 func TestUpdateWorkout(t *testing.T) {
-	exer1 := createTestExercise(t)
+	work1 := createTestWorkout(t)
 
-	arg := UpdateExerciseParams {
-		ExerciseName: "Squat",
-		ExerciseTypeID: "Legs",
-		ID:	exer1.ID,
+	arg := UpdateWorkoutParams{
+		WorkoutName:    "Legs",
+		WorkoutType: []string{"Quads, Hamstrings, Calves"},
+		ID:             work1.ID,
 	}
 
-	err := testQueries.UpdateExercise(context.Background(), arg)
+	get := GetWorkoutNameParams{
+		UserID:      work1.UserID,
+		WorkoutName: arg.WorkoutName,
+	}
+
+	err := testQueries.UpdateWorkout(context.Background(), arg)
 	require.NoError(t, err)
 
-	exer2, err := testQueries.GatherExercises(context.Background(), exer1.UserID)
+	work2, err := testQueries.GetWorkoutName(context.Background(), get)
 
 	require.NoError(t, err)
-	require.NotEmpty(t, exer2)
+	require.NotEmpty(t, work2)
 
-	require.Equal(t, arg.ExerciseName, exer2[0].ExerciseName)
-	require.Equal(t, arg.ExerciseTypeID, exer2[0].ExerciseTypeID)
+	require.Equal(t, arg.WorkoutName, work2.WorkoutName)
+	require.Equal(t, arg.WorkoutType, work2.WorkoutType)
 
-	deleteTestExercise(t, exer1)
+	deleteTestWorkout(t, work1)
 
 }
 

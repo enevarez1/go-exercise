@@ -16,7 +16,7 @@ DELETE FROM Exercise_Workout_Junction WHERE junction_id = $1 AND Exercise_Workou
 `
 
 type DeleteWorkoutJunctionParams struct {
-	JunctionID string `json:"junction_id"`
+	JunctionID int32  `json:"junction_id"`
 	UserID     string `json:"user_id"`
 }
 
@@ -68,7 +68,7 @@ ON CONFLICT (exercise_id, workout_id, user_id) DO NOTHING
 `
 
 type InsertNewWorkJuncParams struct {
-	JunctionID string `json:"junction_id"`
+	JunctionID int32  `json:"junction_id"`
 	ExerciseID int32  `json:"exercise_id"`
 	WorkoutID  int32  `json:"workout_id"`
 	UserID     string `json:"user_id"`
@@ -89,7 +89,7 @@ DELETE FROM Exercise_Workout_Junction
 WHERE junction_id = $1 AND exercise_id NOT IN ($1::int[])
 `
 
-func (q *Queries) RemoveOldWorkJunc(ctx context.Context, junctionID string) error {
+func (q *Queries) RemoveOldWorkJunc(ctx context.Context, junctionID int32) error {
 	_, err := q.db.ExecContext(ctx, removeOldWorkJunc, junctionID)
 	return err
 }

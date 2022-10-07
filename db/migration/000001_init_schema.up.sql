@@ -30,7 +30,7 @@ CREATE TABLE Workout (
 );
 
 CREATE TABLE Exercise_Workout_Junction (
-	junction_id TEXT NOT NULL,
+	junction_id SERIAL PRIMARY KEY,
   	exercise_id INT NOT NULL,
   	workout_id INT NOT NULL,
 	user_id TEXT NOT NULL,
@@ -52,7 +52,7 @@ CREATE UNIQUE INDEX idx_junction ON Exercise_Workout_Junction (exercise_id, work
 
 CREATE TABLE Exercise_Workout_Target (
   	id SERIAL PRIMARY KEY,
-  	junction_id TEXT NOT NULL,
+  	junction_id INT NOT NULL,
   	set_number INT NOT NULL,
   	min_reps INT NOT NULL,
   	max_reps INT NOT NULL,
@@ -69,18 +69,18 @@ CREATE TABLE Log (
 	user_id TEXT NOT NULL,
 	CONSTRAINT fk_user 
 		FOREIGN KEY(user_id) 
-		REFERENCES Users(id)
+		REFERENCES Users(user_name)
 		ON DELETE CASCADE,
 	CONSTRAINT fk_workout_id 
 		FOREIGN KEY(workout_id) 
-		REFERENCES Workout("id")
+		REFERENCES Workout(id)
 		ON DELETE CASCADE
 );
 
 CREATE TABLE Log_Entry (
   	id SERIAL PRIMARY KEY,
   	log_id INT NOT NULL,
-  	junction_id TEXT NOT NULL,
+  	junction_id INT NOT NULL,
   	set_number INT NOT NULL,
   	weight INT NOT NULL,
   	reps INT NOT NULL,
