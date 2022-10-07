@@ -7,30 +7,34 @@ package db
 
 import (
 	"context"
+
+	"github.com/lib/pq"
 )
 
 const createWorkout = `-- name: CreateWorkout :one
 INSERT INTO Workout (
     workout_name,
-    workout_type_id
+    workout_type,
+    user_id
 ) VALUES (
-    $1, $2
+    $1, $2, $3
 )
-RETURNING id, workout_name, workout_type_id, user_id
+RETURNING id, workout_name, workout_type, user_id
 `
 
 type CreateWorkoutParams struct {
-	WorkoutName   string `json:"workout_name"`
-	WorkoutTypeID string `json:"workout_type_id"`
+	WorkoutName string   `json:"workout_name"`
+	WorkoutType []string `json:"workout_type"`
+	UserID      string   `json:"user_id"`
 }
 
 func (q *Queries) CreateWorkout(ctx context.Context, arg CreateWorkoutParams) (Workout, error) {
-	row := q.db.QueryRowContext(ctx, createWorkout, arg.WorkoutName, arg.WorkoutTypeID)
+	row := q.db.QueryRowContext(ctx, createWorkout, arg.WorkoutName, pq.Array(arg.WorkoutType), arg.UserID)
 	var i Workout
 	err := row.Scan(
 		&i.ID,
 		&i.WorkoutName,
-		&i.WorkoutTypeID,
+		pq.Array(&i.WorkoutType),
 		&i.UserID,
 	)
 	return i, err
@@ -45,87 +49,33 @@ func (q *Queries) DeleteWorkout(ctx context.Context, id int32) error {
 	return err
 }
 
-const getWorkoutBasedOnType = `-- name: GetWorkoutBasedOnType :many
-SELECT id, workout_name, workout_type_id, user_id FROM Workout 
-    WHERE user_id = $1 AND workout_type_id = $2
-`
-
-type GetWorkoutBasedOnTypeParams struct {
-	UserID        int32  `json:"user_id"`
-	WorkoutTypeID string `json:"workout_type_id"`
-}
-
-func (q *Queries) GetWorkoutBasedOnType(ctx context.Context, arg GetWorkoutBasedOnTypeParams) ([]Workout, error) {
-	rows, err := q.db.QueryContext(ctx, getWorkoutBasedOnType, arg.UserID, arg.WorkoutTypeID)
-	if err != nil {
-		return nil, err
-	}
-	defer rows.Close()
-	var items []Workout
-	for rows.Next() {
-		var i Workout
-		if err := rows.Scan(
-			&i.ID,
-			&i.WorkoutName,
-			&i.WorkoutTypeID,
-			&i.UserID,
-		); err != nil {
-			return nil, err
-		}
-		items = append(items, i)
-	}
-	if err := rows.Close(); err != nil {
-		return nil, err
-	}
-	if err := rows.Err(); err != nil {
-		return nil, err
-	}
-	return items, nil
-}
-
-const getWorkoutName = `-- name: GetWorkoutName :many
-SELECT id, workout_name, workout_type_id, user_id FROM Workout 
+const getWorkoutName = `-- name: GetWorkoutName :one
+SELECT id, workout_name, workout_type, user_id FROM Workout 
     WHERE user_id = $1 AND workout_name = $2
 `
 
 type GetWorkoutNameParams struct {
-	UserID      int32  `json:"user_id"`
+	UserID      string `json:"user_id"`
 	WorkoutName string `json:"workout_name"`
 }
 
-func (q *Queries) GetWorkoutName(ctx context.Context, arg GetWorkoutNameParams) ([]Workout, error) {
-	rows, err := q.db.QueryContext(ctx, getWorkoutName, arg.UserID, arg.WorkoutName)
-	if err != nil {
-		return nil, err
-	}
-	defer rows.Close()
-	var items []Workout
-	for rows.Next() {
-		var i Workout
-		if err := rows.Scan(
-			&i.ID,
-			&i.WorkoutName,
-			&i.WorkoutTypeID,
-			&i.UserID,
-		); err != nil {
-			return nil, err
-		}
-		items = append(items, i)
-	}
-	if err := rows.Close(); err != nil {
-		return nil, err
-	}
-	if err := rows.Err(); err != nil {
-		return nil, err
-	}
-	return items, nil
+func (q *Queries) GetWorkoutName(ctx context.Context, arg GetWorkoutNameParams) (Workout, error) {
+	row := q.db.QueryRowContext(ctx, getWorkoutName, arg.UserID, arg.WorkoutName)
+	var i Workout
+	err := row.Scan(
+		&i.ID,
+		&i.WorkoutName,
+		pq.Array(&i.WorkoutType),
+		&i.UserID,
+	)
+	return i, err
 }
 
 const getWorkouts = `-- name: GetWorkouts :many
-SELECT id, workout_name, workout_type_id, user_id FROM Workout WHERE user_id = $1
+SELECT id, workout_name, workout_type, user_id FROM Workout WHERE user_id = $1
 `
 
-func (q *Queries) GetWorkouts(ctx context.Context, userID int32) ([]Workout, error) {
+func (q *Queries) GetWorkouts(ctx context.Context, userID string) ([]Workout, error) {
 	rows, err := q.db.QueryContext(ctx, getWorkouts, userID)
 	if err != nil {
 		return nil, err
@@ -137,7 +87,7 @@ func (q *Queries) GetWorkouts(ctx context.Context, userID int32) ([]Workout, err
 		if err := rows.Scan(
 			&i.ID,
 			&i.WorkoutName,
-			&i.WorkoutTypeID,
+			pq.Array(&i.WorkoutType),
 			&i.UserID,
 		); err != nil {
 			return nil, err
@@ -156,17 +106,17 @@ func (q *Queries) GetWorkouts(ctx context.Context, userID int32) ([]Workout, err
 const updateWorkout = `-- name: UpdateWorkout :exec
 UPDATE Workout
 SET workout_name = $1,
-    workout_type_id = $2
+    workout_type = $2
 WHERE id = $3
 `
 
 type UpdateWorkoutParams struct {
-	WorkoutName   string `json:"workout_name"`
-	WorkoutTypeID string `json:"workout_type_id"`
-	ID            int32  `json:"id"`
+	WorkoutName string   `json:"workout_name"`
+	WorkoutType []string `json:"workout_type"`
+	ID          int32    `json:"id"`
 }
 
 func (q *Queries) UpdateWorkout(ctx context.Context, arg UpdateWorkoutParams) error {
-	_, err := q.db.ExecContext(ctx, updateWorkout, arg.WorkoutName, arg.WorkoutTypeID, arg.ID)
+	_, err := q.db.ExecContext(ctx, updateWorkout, arg.WorkoutName, pq.Array(arg.WorkoutType), arg.ID)
 	return err
 }

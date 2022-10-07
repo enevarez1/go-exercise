@@ -1,7 +1,7 @@
 -- name: CreateWorkout :one
 INSERT INTO Workout (
     workout_name,
-    workout_type_id
+    workout_type,
     user_id
 ) VALUES (
     $1, $2, $3
@@ -11,7 +11,7 @@ RETURNING *;
 -- name: UpdateWorkout :exec
 UPDATE Workout
 SET workout_name = $1,
-    workout_type_id = $2
+    workout_type = $2
 WHERE id = $3;
 
 -- name: DeleteWorkout :exec
@@ -26,4 +26,4 @@ SELECT * FROM Workout
 
 -- -- name: GetWorkoutBasedOnType :many
 -- SELECT * FROM Workout 
---     WHERE user_id = $1 AND workout_type_id = $2;
+--     WHERE user_id = $1 AND workout_type = $2;

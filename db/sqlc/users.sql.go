@@ -18,7 +18,7 @@ INSERT INTO Users (
 ) VALUES (
     $1, $2, $3, $4
 )
-RETURNING id, user_name, full_name, email, password, created_at, last_updated
+RETURNING user_name, full_name, email, password, created_at, last_updated
 `
 
 type CreateUserParams struct {
@@ -37,7 +37,6 @@ func (q *Queries) CreateUser(ctx context.Context, arg CreateUserParams) (User, e
 	)
 	var i User
 	err := row.Scan(
-		&i.ID,
 		&i.UserName,
 		&i.FullName,
 		&i.Email,
@@ -49,23 +48,22 @@ func (q *Queries) CreateUser(ctx context.Context, arg CreateUserParams) (User, e
 }
 
 const deleteUser = `-- name: DeleteUser :exec
-DELETE FROM Users WHERE id = $1
+DELETE FROM Users WHERE user_name = $1
 `
 
-func (q *Queries) DeleteUser(ctx context.Context, id int32) error {
-	_, err := q.db.ExecContext(ctx, deleteUser, id)
+func (q *Queries) DeleteUser(ctx context.Context, userName string) error {
+	_, err := q.db.ExecContext(ctx, deleteUser, userName)
 	return err
 }
 
 const getUser = `-- name: GetUser :one
-SELECT id, user_name, full_name, email, password, created_at, last_updated FROM Users WHERE id = $1
+SELECT user_name, full_name, email, password, created_at, last_updated FROM Users WHERE user_name = $1
 `
 
-func (q *Queries) GetUser(ctx context.Context, id int32) (User, error) {
-	row := q.db.QueryRowContext(ctx, getUser, id)
+func (q *Queries) GetUser(ctx context.Context, userName string) (User, error) {
+	row := q.db.QueryRowContext(ctx, getUser, userName)
 	var i User
 	err := row.Scan(
-		&i.ID,
 		&i.UserName,
 		&i.FullName,
 		&i.Email,
@@ -80,16 +78,16 @@ const updateUser = `-- name: UpdateUser :exec
 UPDATE Users 
 SET full_name = $1,
     password = $2
-WHERE id = $3
+WHERE user_name = $3
 `
 
 type UpdateUserParams struct {
 	FullName string `json:"full_name"`
 	Password string `json:"password"`
-	ID       int32  `json:"id"`
+	UserName string `json:"user_name"`
 }
 
 func (q *Queries) UpdateUser(ctx context.Context, arg UpdateUserParams) error {
-	_, err := q.db.ExecContext(ctx, updateUser, arg.FullName, arg.Password, arg.ID)
+	_, err := q.db.ExecContext(ctx, updateUser, arg.FullName, arg.Password, arg.UserName)
 	return err
 }

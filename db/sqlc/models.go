@@ -13,35 +13,35 @@ type Exercise struct {
 	ID             int32  `json:"id"`
 	ExerciseName   string `json:"exercise_name"`
 	ExerciseTypeID string `json:"exercise_type_id"`
-	UserID         int32  `json:"user_id"`
+	UserID         string `json:"user_id"`
 }
 
 type ExerciseWorkoutJunction struct {
-	ID         int32 `json:"id"`
-	ExerciseID int32 `json:"exercise_id"`
-	WorkoutID  int32 `json:"workout_id"`
-	UserID     int32 `json:"user_id"`
+	JunctionID string `json:"junction_id"`
+	ExerciseID int32  `json:"exercise_id"`
+	WorkoutID  int32  `json:"workout_id"`
+	UserID     string `json:"user_id"`
 }
 
 type ExerciseWorkoutTarget struct {
-	ID         int32 `json:"id"`
-	JunctionID int32 `json:"junction_id"`
-	SetNumber  int32 `json:"set_number"`
-	MinReps    int32 `json:"min_reps"`
-	MaxReps    int32 `json:"max_reps"`
+	ID         int32  `json:"id"`
+	JunctionID string `json:"junction_id"`
+	SetNumber  int32  `json:"set_number"`
+	MinReps    int32  `json:"min_reps"`
+	MaxReps    int32  `json:"max_reps"`
 }
 
 type Log struct {
 	ID        int32     `json:"id"`
 	WorkoutID int32     `json:"workout_id"`
 	Dateof    time.Time `json:"dateof"`
-	UserID    int32     `json:"user_id"`
+	UserID    string    `json:"user_id"`
 }
 
 type LogEntry struct {
 	ID           int32        `json:"id"`
 	LogID        int32        `json:"log_id"`
-	JunctionID   int32        `json:"junction_id"`
+	JunctionID   string       `json:"junction_id"`
 	SetNumber    int32        `json:"set_number"`
 	Weight       int32        `json:"weight"`
 	Reps         int32        `json:"reps"`
@@ -49,7 +49,6 @@ type LogEntry struct {
 }
 
 type User struct {
-	ID          int32        `json:"id"`
 	UserName    string       `json:"user_name"`
 	FullName    string       `json:"full_name"`
 	Email       string       `json:"email"`
@@ -59,13 +58,8 @@ type User struct {
 }
 
 type Workout struct {
-	ID            int32  `json:"id"`
-	WorkoutName   string `json:"workout_name"`
-	WorkoutTypeID string `json:"workout_type_id"`
-	UserID        int32  `json:"user_id"`
-}
-
-type WorkoutType struct {
-	WorkoutType string `json:"workout_type"`
-	UserID      int32  `json:"user_id"`
+	ID          int32    `json:"id"`
+	WorkoutName string   `json:"workout_name"`
+	WorkoutType []string `json:"workout_type"`
+	UserID      string   `json:"user_id"`
 }
