@@ -64,7 +64,7 @@ func TestGetWorkouts(t *testing.T) {
 	//Create 2nd Workout
 	arg2 := CreateWorkoutParams{
 		WorkoutName: "Legs",
-		WorkoutType: []string{"Quads, Hamstrings, Calves"},
+		WorkoutType: []string{"Quads", "Hamstrings", "Calves"},
 		UserID:      work1.UserID, // make this object slice
 	}
 

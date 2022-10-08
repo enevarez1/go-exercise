@@ -24,11 +24,11 @@ type ExerciseWorkoutJunction struct {
 }
 
 type ExerciseWorkoutTarget struct {
-	ID         int32  `json:"id"`
-	JunctionID string `json:"junction_id"`
-	SetNumber  int32  `json:"set_number"`
-	MinReps    int32  `json:"min_reps"`
-	MaxReps    int32  `json:"max_reps"`
+	ID         int32 `json:"id"`
+	JunctionID int32 `json:"junction_id"`
+	SetNumber  int32 `json:"set_number"`
+	MinReps    int32 `json:"min_reps"`
+	MaxReps    int32 `json:"max_reps"`
 }
 
 type Log struct {
@@ -41,7 +41,7 @@ type Log struct {
 type LogEntry struct {
 	ID           int32        `json:"id"`
 	LogID        int32        `json:"log_id"`
-	JunctionID   string       `json:"junction_id"`
+	JunctionID   int32        `json:"junction_id"`
 	SetNumber    int32        `json:"set_number"`
 	Weight       int32        `json:"weight"`
 	Reps         int32        `json:"reps"`

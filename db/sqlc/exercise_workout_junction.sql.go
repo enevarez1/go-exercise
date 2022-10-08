@@ -25,7 +25,7 @@ func (q *Queries) DeleteWorkoutJunction(ctx context.Context, arg DeleteWorkoutJu
 	return err
 }
 
-const getExerWorkJunc = `-- name: GetExerWorkJunc :one
+const getExerWorkJunc = `-- name: GetExerWorkJunc :many
 SELECT exercise_name, exercise_type_id, workout_name, workout_type
 FROM Exercise_Workout_Junction 
 JOIN Exercise ON Exercise.id = Exercise_Workout_Junction.exercise_id
@@ -45,16 +45,32 @@ type GetExerWorkJuncRow struct {
 	WorkoutType    []string `json:"workout_type"`
 }
 
-func (q *Queries) GetExerWorkJunc(ctx context.Context, arg GetExerWorkJuncParams) (GetExerWorkJuncRow, error) {
-	row := q.db.QueryRowContext(ctx, getExerWorkJunc, arg.WorkoutID, arg.UserID)
-	var i GetExerWorkJuncRow
-	err := row.Scan(
-		&i.ExerciseName,
-		&i.ExerciseTypeID,
-		&i.WorkoutName,
-		pq.Array(&i.WorkoutType),
-	)
-	return i, err
+func (q *Queries) GetExerWorkJunc(ctx context.Context, arg GetExerWorkJuncParams) ([]GetExerWorkJuncRow, error) {
+	rows, err := q.db.QueryContext(ctx, getExerWorkJunc, arg.WorkoutID, arg.UserID)
+	if err != nil {
+		return nil, err
+	}
+	defer rows.Close()
+	var items []GetExerWorkJuncRow
+	for rows.Next() {
+		var i GetExerWorkJuncRow
+		if err := rows.Scan(
+			&i.ExerciseName,
+			&i.ExerciseTypeID,
+			&i.WorkoutName,
+			pq.Array(&i.WorkoutType),
+		); err != nil {
+			return nil, err
+		}
+		items = append(items, i)
+	}
+	if err := rows.Close(); err != nil {
+		return nil, err
+	}
+	if err := rows.Err(); err != nil {
+		return nil, err
+	}
+	return items, nil
 }
 
 const insertNewWorkJunc = `-- name: InsertNewWorkJunc :exec
@@ -86,10 +102,15 @@ func (q *Queries) InsertNewWorkJunc(ctx context.Context, arg InsertNewWorkJuncPa
 
 const removeOldWorkJunc = `-- name: RemoveOldWorkJunc :exec
 DELETE FROM Exercise_Workout_Junction
-WHERE junction_id = $1 AND exercise_id NOT IN ($1::int[])
+WHERE workout_id = $1 AND exercise_id NOT IN ($2::int[])
 `
 
-func (q *Queries) RemoveOldWorkJunc(ctx context.Context, junctionID int32) error {
-	_, err := q.db.ExecContext(ctx, removeOldWorkJunc, junctionID)
+type RemoveOldWorkJuncParams struct {
+	WorkoutID int32   `json:"workout_id"`
+	Column2   []int32 `json:"column_2"`
+}
+
+func (q *Queries) RemoveOldWorkJunc(ctx context.Context, arg RemoveOldWorkJuncParams) error {
+	_, err := q.db.ExecContext(ctx, removeOldWorkJunc, arg.WorkoutID, pq.Array(arg.Column2))
 	return err
 }
