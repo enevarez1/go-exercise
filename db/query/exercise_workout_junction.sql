@@ -9,7 +9,7 @@ ON CONFLICT (exercise_id, workout_id, user_id) DO NOTHING;
 
 -- name: RemoveOldWorkJunc :exec
 DELETE FROM Exercise_Workout_Junction
-WHERE workout_id = $1 AND exercise_id NOT IN ($2::int[]);
+WHERE workout_id = $1 AND NOT (exercise_id = ANY($2::int[]));
 
 -- name: GetExerWorkJunc :many
 SELECT exercise_name, exercise_type_id, workout_name, workout_type

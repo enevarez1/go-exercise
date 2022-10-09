@@ -102,7 +102,7 @@ func (q *Queries) InsertNewWorkJunc(ctx context.Context, arg InsertNewWorkJuncPa
 
 const removeOldWorkJunc = `-- name: RemoveOldWorkJunc :exec
 DELETE FROM Exercise_Workout_Junction
-WHERE workout_id = $1 AND exercise_id NOT IN ($2::int[])
+WHERE workout_id = $1 AND NOT (exercise_id = ANY($2::int[]))
 `
 
 type RemoveOldWorkJuncParams struct {
