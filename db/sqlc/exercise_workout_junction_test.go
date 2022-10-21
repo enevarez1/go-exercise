@@ -19,17 +19,17 @@ func testSetup(t *testing.T) (User, []Exercise, Workout){
 		{
 			ExerciseName: "Bench",
 			ExerciseTypeID: "Chest",
-			UserID: user.UserName,
+			UserID: user.ID,
 		},
 		{
 			ExerciseName: "Deadlift",
 			ExerciseTypeID: "Back",
-			UserID: user.UserName,
+			UserID: user.ID,
 		},
 		{
 			ExerciseName: "Squat",
 			ExerciseTypeID: "Legs",
-			UserID: user.UserName,
+			UserID: user.ID,
 		},
 	}
 
@@ -44,7 +44,7 @@ func testSetup(t *testing.T) (User, []Exercise, Workout){
 	workArg := CreateWorkoutParams{
 		WorkoutName: "TestWorkout",
 		WorkoutType: []string{"Chest", "Back", "Legs"},
-		UserID: user.UserName,
+		UserID: user.ID,
 	}
 
 	work, err := testQueries.CreateWorkout(context.Background(), workArg)
@@ -68,7 +68,7 @@ func TestInsertNewWorkJunc(t *testing.T) {
 		JunctionID: 1,
 		ExerciseID: exercises[0].ID,
 		WorkoutID: workout.ID,
-		UserID: user.UserName,
+		UserID: user.ID,
 	}
 
 	err := testQueries.InsertNewWorkJunc(context.Background(), args)
@@ -84,7 +84,7 @@ func TestDeleteWorkJunc(t *testing.T) {
 		JunctionID: 1,
 		ExerciseID: exercises[0].ID,
 		WorkoutID: workout.ID,
-		UserID: user.UserName,
+		UserID: user.ID,
 	}
 
 	err := testQueries.InsertNewWorkJunc(context.Background(), args)
@@ -92,7 +92,7 @@ func TestDeleteWorkJunc(t *testing.T) {
 
 	arg := DeleteWorkoutJunctionParams{
 		JunctionID: 1,
-		UserID: user.UserName,
+		UserID: user.ID,
 	}
 
 	err = testQueries.DeleteWorkoutJunction(context.Background(), arg)
@@ -109,19 +109,19 @@ func TestGetJunc(t *testing.T) {
 			JunctionID: 1,
 			ExerciseID: exercises[0].ID,
 			WorkoutID: workout.ID,
-			UserID: user.UserName,
+			UserID: user.ID,
 		},
 		{
 			JunctionID: 2,
 			ExerciseID: exercises[1].ID,
 			WorkoutID: workout.ID,
-			UserID: user.UserName,
+			UserID: user.ID,
 		},
 		{
 			JunctionID: 3,
 			ExerciseID: exercises[2].ID,
 			WorkoutID: workout.ID,
-			UserID: user.UserName,
+			UserID: user.ID,
 		},
 	}
 
@@ -132,7 +132,7 @@ func TestGetJunc(t *testing.T) {
 
 	get := GetExerWorkJuncParams{
 		WorkoutID: workout.ID,
-		UserID: user.UserName,
+		UserID: user.ID,
 	}
 
 	results, err := testQueries.GetExerWorkJunc(context.Background(), get)
@@ -158,19 +158,19 @@ func TestRemoveOldJunc(t *testing.T) {
 			JunctionID: 1,
 			ExerciseID: exercises[0].ID,
 			WorkoutID: workout.ID,
-			UserID: user.UserName,
+			UserID: user.ID,
 		},
 		{
 			JunctionID: 2,
 			ExerciseID: exercises[1].ID,
 			WorkoutID: workout.ID,
-			UserID: user.UserName,
+			UserID: user.ID,
 		},
 		{
 			JunctionID: 3,
 			ExerciseID: exercises[2].ID,
 			WorkoutID: workout.ID,
-			UserID: user.UserName,
+			UserID: user.ID,
 		},
 	}
 
@@ -189,7 +189,7 @@ func TestRemoveOldJunc(t *testing.T) {
 
 	get := GetExerWorkJuncParams{
 		WorkoutID: workout.ID,
-		UserID: user.UserName,
+		UserID: user.ID,
 	}
 
 	results, err := testQueries.GetExerWorkJunc(context.Background(), get)

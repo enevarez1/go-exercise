@@ -13,14 +13,14 @@ type Exercise struct {
 	ID             int32  `json:"id"`
 	ExerciseName   string `json:"exercise_name"`
 	ExerciseTypeID string `json:"exercise_type_id"`
-	UserID         string `json:"user_id"`
+	UserID         int32  `json:"user_id"`
 }
 
 type ExerciseWorkoutJunction struct {
-	JunctionID int32  `json:"junction_id"`
-	ExerciseID int32  `json:"exercise_id"`
-	WorkoutID  int32  `json:"workout_id"`
-	UserID     string `json:"user_id"`
+	JunctionID int32 `json:"junction_id"`
+	ExerciseID int32 `json:"exercise_id"`
+	WorkoutID  int32 `json:"workout_id"`
+	UserID     int32 `json:"user_id"`
 }
 
 type ExerciseWorkoutTarget struct {
@@ -35,7 +35,7 @@ type Log struct {
 	ID        int32     `json:"id"`
 	WorkoutID int32     `json:"workout_id"`
 	Dateof    time.Time `json:"dateof"`
-	UserID    string    `json:"user_id"`
+	UserID    int32     `json:"user_id"`
 }
 
 type LogEntry struct {
@@ -49,6 +49,7 @@ type LogEntry struct {
 }
 
 type User struct {
+	ID          int32        `json:"id"`
 	UserName    string       `json:"user_name"`
 	FullName    string       `json:"full_name"`
 	Email       string       `json:"email"`
@@ -61,5 +62,5 @@ type Workout struct {
 	ID          int32    `json:"id"`
 	WorkoutName string   `json:"workout_name"`
 	WorkoutType []string `json:"workout_type"`
-	UserID      string   `json:"user_id"`
+	UserID      int32    `json:"user_id"`
 }

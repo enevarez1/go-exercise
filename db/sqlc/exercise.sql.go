@@ -23,7 +23,7 @@ RETURNING id, exercise_name, exercise_type_id, user_id
 type CreateExerciseParams struct {
 	ExerciseName   string `json:"exercise_name"`
 	ExerciseTypeID string `json:"exercise_type_id"`
-	UserID         string `json:"user_id"`
+	UserID         int32  `json:"user_id"`
 }
 
 func (q *Queries) CreateExercise(ctx context.Context, arg CreateExerciseParams) (Exercise, error) {
@@ -51,7 +51,7 @@ const gatherExercises = `-- name: GatherExercises :many
 SELECT id, exercise_name, exercise_type_id, user_id from Exercise where user_id = $1
 `
 
-func (q *Queries) GatherExercises(ctx context.Context, userID string) ([]Exercise, error) {
+func (q *Queries) GatherExercises(ctx context.Context, userID int32) ([]Exercise, error) {
 	rows, err := q.db.QueryContext(ctx, gatherExercises, userID)
 	if err != nil {
 		return nil, err

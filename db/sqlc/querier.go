@@ -13,14 +13,14 @@ type Querier interface {
 	CreateUser(ctx context.Context, arg CreateUserParams) (User, error)
 	CreateWorkout(ctx context.Context, arg CreateWorkoutParams) (Workout, error)
 	DeleteExercise(ctx context.Context, id int32) error
-	DeleteUser(ctx context.Context, userName string) error
+	DeleteUser(ctx context.Context, id int32) error
 	DeleteWorkout(ctx context.Context, id int32) error
 	DeleteWorkoutJunction(ctx context.Context, arg DeleteWorkoutJunctionParams) error
-	GatherExercises(ctx context.Context, userID string) ([]Exercise, error)
+	GatherExercises(ctx context.Context, userID int32) ([]Exercise, error)
 	GetExerWorkJunc(ctx context.Context, arg GetExerWorkJuncParams) ([]GetExerWorkJuncRow, error)
-	GetUser(ctx context.Context, userName string) (User, error)
+	GetUser(ctx context.Context, id int32) (User, error)
 	GetWorkoutName(ctx context.Context, arg GetWorkoutNameParams) (Workout, error)
-	GetWorkouts(ctx context.Context, userID string) ([]Workout, error)
+	GetWorkouts(ctx context.Context, userID int32) ([]Workout, error)
 	InsertNewWorkJunc(ctx context.Context, arg InsertNewWorkJuncParams) error
 	RemoveOldWorkJunc(ctx context.Context, arg RemoveOldWorkJuncParams) error
 	UpdateExercise(ctx context.Context, arg UpdateExerciseParams) error

@@ -9,10 +9,10 @@ import (
 )
 
 type createUserRequest struct {
-	UserName string `json:"user_name" binding:required`
-	FullName string `json:"full_name" binding:required`
-	Email    string `json:"email" binding:required`
-	Password string `json:"password" binding:required`
+	UserName string `json:"UserName" binding:"required"`
+	FullName string `json:"FullName" binding:"required"`
+	Email    string `json:"Email" binding:"required"`
+	Password string `json:"Password" binding:"required"`
 }
 
 func (server *Server) createUser(ctx *gin.Context) {
@@ -39,7 +39,7 @@ func (server *Server) createUser(ctx *gin.Context) {
 }
 
 type getUserRequest struct {
-	ID string `json: "user_name"`
+	ID *int32 `uri:"id" binding:"required,min=1"`
 }
 
 func (server *Server) getUser(ctx *gin.Context) {
@@ -49,7 +49,8 @@ func (server *Server) getUser(ctx *gin.Context) {
 		return
 	}
 
-	user, err := server.store.GetUser(ctx, req.ID)
+
+	user, err := server.store.GetUser(ctx, *req.ID)
 	if err != nil {
 		if err == sql.ErrNoRows {
 			ctx.JSON(http.StatusNotFound, errorResponse(err))
@@ -62,9 +63,10 @@ func (server *Server) getUser(ctx *gin.Context) {
 }
 
 type updateUserRequest struct {
-	FullName string `json:"full_name" binding:required`
-	Password string `json:"password" binding:required`
-	ID string `json: "user_name"`
+	UserName string `json:"UserName" binding:"required"`
+	FullName string `json:"FullName" binding:"required"`
+	Password string `json:"Password" binding:"required"`
+	ID int32 `uri:"id" binding:"required,min=1"`
 }
 
 func (server *Server) updateUser(ctx *gin.Context) {
@@ -80,7 +82,7 @@ func (server *Server) updateUser(ctx *gin.Context) {
 	}
 
 	arg := db.UpdateUserParams{
-		UserName: req.ID,
+		UserName: req.UserName,
 		FullName: req.FullName,
 		Password: req.Password,
 	}
@@ -95,7 +97,7 @@ func (server *Server) updateUser(ctx *gin.Context) {
 }
 
 type deleteUserRequest struct {
-	ID string `json: "user_name"`
+	ID int32 `uri:"id" binding:"required,min=1"`
 }
 
 func (server *Server) deleteUser(ctx *gin.Context) {
@@ -105,7 +107,7 @@ func (server *Server) deleteUser(ctx *gin.Context) {
 		return
 	}
 
-	err := server.store.DeleteUser(ctx, req.ID)
+	err := server.store.DeleteUser(ctx, int32(req.ID))
 	if err != nil {
 		if err == sql.ErrNoRows {
 			ctx.JSON(http.StatusNotFound, errorResponse(err))

@@ -13,7 +13,7 @@ func createTestExercise(t *testing.T) Exercise {
 	arg := CreateExerciseParams {
 		ExerciseName: "Bench",
 		ExerciseTypeID: "Chest",
-		UserID: user.UserName,
+		UserID: user.ID,
 	}
 
 	exercise, err := testQueries.CreateExercise(context.Background(), arg)

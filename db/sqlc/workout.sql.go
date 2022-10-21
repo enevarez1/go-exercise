@@ -25,7 +25,7 @@ RETURNING id, workout_name, workout_type, user_id
 type CreateWorkoutParams struct {
 	WorkoutName string   `json:"workout_name"`
 	WorkoutType []string `json:"workout_type"`
-	UserID      string   `json:"user_id"`
+	UserID      int32    `json:"user_id"`
 }
 
 func (q *Queries) CreateWorkout(ctx context.Context, arg CreateWorkoutParams) (Workout, error) {
@@ -55,7 +55,7 @@ SELECT id, workout_name, workout_type, user_id FROM Workout
 `
 
 type GetWorkoutNameParams struct {
-	UserID      string `json:"user_id"`
+	UserID      int32  `json:"user_id"`
 	WorkoutName string `json:"workout_name"`
 }
 
@@ -75,7 +75,7 @@ const getWorkouts = `-- name: GetWorkouts :many
 SELECT id, workout_name, workout_type, user_id FROM Workout WHERE user_id = $1
 `
 
-func (q *Queries) GetWorkouts(ctx context.Context, userID string) ([]Workout, error) {
+func (q *Queries) GetWorkouts(ctx context.Context, userID int32) ([]Workout, error) {
 	rows, err := q.db.QueryContext(ctx, getWorkouts, userID)
 	if err != nil {
 		return nil, err

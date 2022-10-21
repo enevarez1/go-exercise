@@ -16,8 +16,8 @@ DELETE FROM Exercise_Workout_Junction WHERE junction_id = $1 AND Exercise_Workou
 `
 
 type DeleteWorkoutJunctionParams struct {
-	JunctionID int32  `json:"junction_id"`
-	UserID     string `json:"user_id"`
+	JunctionID int32 `json:"junction_id"`
+	UserID     int32 `json:"user_id"`
 }
 
 func (q *Queries) DeleteWorkoutJunction(ctx context.Context, arg DeleteWorkoutJunctionParams) error {
@@ -34,8 +34,8 @@ WHERE workout_id = $1 AND Exercise_Workout_Junction.user_id = $2
 `
 
 type GetExerWorkJuncParams struct {
-	WorkoutID int32  `json:"workout_id"`
-	UserID    string `json:"user_id"`
+	WorkoutID int32 `json:"workout_id"`
+	UserID    int32 `json:"user_id"`
 }
 
 type GetExerWorkJuncRow struct {
@@ -84,10 +84,10 @@ ON CONFLICT (exercise_id, workout_id, user_id) DO NOTHING
 `
 
 type InsertNewWorkJuncParams struct {
-	JunctionID int32  `json:"junction_id"`
-	ExerciseID int32  `json:"exercise_id"`
-	WorkoutID  int32  `json:"workout_id"`
-	UserID     string `json:"user_id"`
+	JunctionID int32 `json:"junction_id"`
+	ExerciseID int32 `json:"exercise_id"`
+	WorkoutID  int32 `json:"workout_id"`
+	UserID     int32 `json:"user_id"`
 }
 
 func (q *Queries) InsertNewWorkJunc(ctx context.Context, arg InsertNewWorkJuncParams) error {

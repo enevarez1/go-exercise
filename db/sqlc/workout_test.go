@@ -13,7 +13,7 @@ func createTestWorkout(t *testing.T) Workout {
 	arg := CreateWorkoutParams{
 		WorkoutName: "Upper Push",
 		WorkoutType: []string{"Chest, Triceps, Shoulders"},
-		UserID:      user.UserName, // make this object slice
+		UserID:      user.ID, // make this object slice
 	}
 
 	workout, err := testQueries.CreateWorkout(context.Background(), arg)

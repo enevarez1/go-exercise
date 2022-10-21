@@ -95,7 +95,7 @@ func (mr *MockStoreMockRecorder) DeleteExercise(arg0, arg1 interface{}) *gomock.
 }
 
 // DeleteUser mocks base method.
-func (m *MockStore) DeleteUser(arg0 context.Context, arg1 string) error {
+func (m *MockStore) DeleteUser(arg0 context.Context, arg1 int32) error {
 	m.ctrl.T.Helper()
 	ret := m.ctrl.Call(m, "DeleteUser", arg0, arg1)
 	ret0, _ := ret[0].(error)
@@ -137,7 +137,7 @@ func (mr *MockStoreMockRecorder) DeleteWorkoutJunction(arg0, arg1 interface{}) *
 }
 
 // GatherExercises mocks base method.
-func (m *MockStore) GatherExercises(arg0 context.Context, arg1 string) ([]db.Exercise, error) {
+func (m *MockStore) GatherExercises(arg0 context.Context, arg1 int32) ([]db.Exercise, error) {
 	m.ctrl.T.Helper()
 	ret := m.ctrl.Call(m, "GatherExercises", arg0, arg1)
 	ret0, _ := ret[0].([]db.Exercise)
@@ -167,7 +167,7 @@ func (mr *MockStoreMockRecorder) GetExerWorkJunc(arg0, arg1 interface{}) *gomock
 }
 
 // GetUser mocks base method.
-func (m *MockStore) GetUser(arg0 context.Context, arg1 string) (db.User, error) {
+func (m *MockStore) GetUser(arg0 context.Context, arg1 int32) (db.User, error) {
 	m.ctrl.T.Helper()
 	ret := m.ctrl.Call(m, "GetUser", arg0, arg1)
 	ret0, _ := ret[0].(db.User)
@@ -197,7 +197,7 @@ func (mr *MockStoreMockRecorder) GetWorkoutName(arg0, arg1 interface{}) *gomock.
 }
 
 // GetWorkouts mocks base method.
-func (m *MockStore) GetWorkouts(arg0 context.Context, arg1 string) ([]db.Workout, error) {
+func (m *MockStore) GetWorkouts(arg0 context.Context, arg1 int32) ([]db.Workout, error) {
 	m.ctrl.T.Helper()
 	ret := m.ctrl.Call(m, "GetWorkouts", arg0, arg1)
 	ret0, _ := ret[0].([]db.Workout)

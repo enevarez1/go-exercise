@@ -1,5 +1,6 @@
 CREATE TABLE Users (
-    user_name TEXT PRIMARY KEY,
+	id SERIAL PRIMARY KEY,
+    user_name TEXT NOT NULL,
     full_name TEXT NOT NULL,
     email TEXT NOT NULL,
     password TEXT NOT NULL,
@@ -11,10 +12,10 @@ CREATE TABLE Exercise (
   	id SERIAL PRIMARY KEY,
   	exercise_name TEXT NOT NULL,
   	exercise_type_id TEXT NOT NULL,
-  	user_id TEXT NOT NULL,
+  	user_id SERIAL NOT NULL,
 	CONSTRAINT fk_user 
 		FOREIGN KEY(user_id) 
-		REFERENCES Users(user_name)
+		REFERENCES Users(id)
 		ON DELETE CASCADE
 );
 
@@ -22,10 +23,10 @@ CREATE TABLE Workout (
   	id SERIAL PRIMARY KEY,
   	workout_name TEXT NOT NULL,
  	workout_type TEXT [],
-	user_id TEXT NOT NULL,
+	user_id SERIAL NOT NULL,
 	CONSTRAINT fk_user 
 		FOREIGN KEY(user_id) 
-		REFERENCES Users(user_name)
+		REFERENCES Users(id)
 		ON DELETE CASCADE
 );
 
@@ -33,10 +34,10 @@ CREATE TABLE Exercise_Workout_Junction (
 	junction_id SERIAL PRIMARY KEY,
   	exercise_id INT NOT NULL,
   	workout_id INT NOT NULL,
-	user_id TEXT NOT NULL,
+	user_id SERIAL NOT NULL,
 	CONSTRAINT fk_user_id 
 		FOREIGN KEY(user_id) 
-		REFERENCES Users(user_name)
+		REFERENCES Users(id)
 		ON DELETE CASCADE,
 	CONSTRAINT fk_exercise_id 
 		FOREIGN KEY(exercise_id) 
@@ -66,10 +67,10 @@ CREATE TABLE Log (
   	id SERIAL PRIMARY KEY,
   	workout_id INT NOT NULL,
   	dateOf TIMESTAMP NOT NULL,
-	user_id TEXT NOT NULL,
+	user_id SERIAL NOT NULL,
 	CONSTRAINT fk_user 
 		FOREIGN KEY(user_id) 
-		REFERENCES Users(user_name)
+		REFERENCES Users(id)
 		ON DELETE CASCADE,
 	CONSTRAINT fk_workout_id 
 		FOREIGN KEY(workout_id) 
