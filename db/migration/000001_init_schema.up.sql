@@ -1,8 +1,8 @@
 CREATE TABLE Users (
 	id SERIAL PRIMARY KEY,
-    user_name TEXT NOT NULL,
+    user_name TEXT UNIQUE NOT NULL,
     full_name TEXT NOT NULL,
-    email TEXT NOT NULL,
+    email TEXT UNIQUE NOT NULL,
     password TEXT NOT NULL,
     created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
     last_updated TIMESTAMP
@@ -22,7 +22,7 @@ CREATE TABLE Exercise (
 CREATE TABLE Workout (
   	id SERIAL PRIMARY KEY,
   	workout_name TEXT NOT NULL,
- 	workout_type TEXT [],
+ 	workout_type TEXT [] NOT NULL,
 	user_id SERIAL NOT NULL,
 	CONSTRAINT fk_user 
 		FOREIGN KEY(user_id) 

@@ -5,15 +5,20 @@ import (
 	"database/sql"
 	"testing"
 
+	"github.com/enevarez1/go-exercise/util"
 	"github.com/stretchr/testify/require"
 )
 
 func createTestingUser(t *testing.T) User {
+
+	hashed, err := util.HashPassword("testSecret")
+	require.NoError(t, err)
+
 	arg := CreateUserParams{
 		UserName: "testy",
 		FullName: "Test Mcgee",
 		Email: "test@test.com",
-		Password: "testSecret",
+		Password: hashed,
 	}
 
 	user, err := testQueries.CreateUser(context.Background(), arg)
